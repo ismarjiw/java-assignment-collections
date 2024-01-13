@@ -1,7 +1,6 @@
 package com.cooksys.ftd.assignments.collections.model;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.cooksys.ftd.assignments.collections.util.MissingImplementationException;
 
@@ -11,6 +10,12 @@ public class OrgChart {
     //  Add those fields here. Consider how you want to store the data, and which collection types to use to make
     //  implementing the other methods as easy as possible. There are several different ways to approach this problem, so
     //  experiment and don't be afraid to change how you're storing your data if it's not working out!
+
+    private Employee employee;
+    private Manager manager;
+    private Set<Employee> allEmployees = new HashSet<>();
+    private Set<Manager> allManagers = new HashSet<>();
+    private Map<Manager, Set<Employee>> orgChart = new HashMap<>();
 
     /**
      * TODO: Implement this method
@@ -38,7 +43,14 @@ public class OrgChart {
      * @return true if the {@code Employee} was added successfully, false otherwise
      */
     public boolean addEmployee(Employee employee) {
-        throw new MissingImplementationException();
+
+        if (allEmployees.contains(employee)) {
+            return false;
+        } else {
+            allEmployees.add(employee);
+            return true;
+        }
+
     }
 
     /**
@@ -50,7 +62,8 @@ public class OrgChart {
      * @return true if the {@code Employee} has been added to the {@code OrgChart}, false otherwise
      */
     public boolean hasEmployee(Employee employee) {
-        throw new MissingImplementationException();
+
+        return allEmployees.contains(employee);
     }
 
     /**
@@ -64,7 +77,8 @@ public class OrgChart {
      *         been added to the {@code OrgChart}
      */
     public Set<Employee> getAllEmployees() {
-        throw new MissingImplementationException();
+
+        return allEmployees;
     }
 
     /**
@@ -78,7 +92,8 @@ public class OrgChart {
      *         have been added to the {@code OrgChart}
      */
     public Set<Manager> getAllManagers() {
-        throw new MissingImplementationException();
+
+        return allManagers;
     }
 
     /**
@@ -99,7 +114,14 @@ public class OrgChart {
      *         or if there are no subordinates for the given {@code Manager}
      */
     public Set<Employee> getDirectSubordinates(Manager manager) {
-        throw new MissingImplementationException();
+        Set<Employee> possibleSubordinates = new HashSet<>();
+        Set<Employee> possibleEmployees = orgChart.get(manager);
+
+        if (possibleEmployees != null && !possibleEmployees.isEmpty()) {
+            possibleSubordinates.addAll(possibleEmployees);
+        }
+
+        return possibleSubordinates;
     }
 
     /**

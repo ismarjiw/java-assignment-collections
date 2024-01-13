@@ -1,6 +1,7 @@
 package com.cooksys.ftd.assignments.collections.model;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.cooksys.ftd.assignments.collections.util.MissingImplementationException;
 
@@ -13,6 +14,9 @@ import com.cooksys.ftd.assignments.collections.util.MissingImplementationExcepti
  */
 public class Manager implements Employee {
 
+    private String name;
+    private Manager manager;
+
     // TODO: Does this class need private fields? If so, add them here
 
     /**
@@ -21,7 +25,8 @@ public class Manager implements Employee {
      * @param name the name of the manager to be created
      */
     public Manager(String name) {
-        throw new MissingImplementationException();
+
+        this.name = name;
     }
 
     /**
@@ -31,7 +36,9 @@ public class Manager implements Employee {
      * @param manager the direct manager of the manager to be created
      */
     public Manager(String name, Manager manager) {
-        throw new MissingImplementationException();
+
+        this.name = name;
+        this.manager = manager;
     }
 
     /**
@@ -41,7 +48,8 @@ public class Manager implements Employee {
      */
     @Override
     public String getName() {
-        throw new MissingImplementationException();
+
+        return name;
     }
 
     /**
@@ -51,7 +59,8 @@ public class Manager implements Employee {
      */
     @Override
     public boolean hasManager() {
-        throw new MissingImplementationException();
+
+        return manager != null;
     }
 
     /**
@@ -61,7 +70,8 @@ public class Manager implements Employee {
      */
     @Override
     public Manager getManager() {
-        throw new MissingImplementationException();
+
+        return manager;
     }
 
     /**
@@ -79,7 +89,30 @@ public class Manager implements Employee {
      */
     @Override
     public List<Manager> getChainOfCommand() {
-        throw new MissingImplementationException();
+
+
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Manager manager1 = (Manager) o;
+        return Objects.equals(name, manager1.name) && Objects.equals(manager, manager1.manager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, manager);
+    }
+
+    @Override
+    public String toString() {
+        return "Manager{" +
+                "name='" + name + '\'' +
+                ", manager=" + manager +
+                '}';
     }
 
     // TODO: Does this class need custom .equals() and .hashcode() methods? If so, implement them here.
