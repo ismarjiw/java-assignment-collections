@@ -13,9 +13,7 @@ public class OrgChart {
 
     private Employee employee;
     private Manager manager;
-    private Set<Employee> allEmployees = new HashSet<>();
-    private Set<Manager> allManagers = new HashSet<>();
-    private Map<Manager, Set<Employee>> orgChart = new HashMap<>();
+    private Set<Employee> orgChart = new HashSet<>();
 
     /**
      * TODO: Implement this method
@@ -44,13 +42,25 @@ public class OrgChart {
      */
     public boolean addEmployee(Employee employee) {
 
-        if (allEmployees.contains(employee)) {
+        if (orgChart.contains(employee)) {
             return false;
-        } else {
-            allEmployees.add(employee);
-            return true;
         }
 
+        if (employee.hasManager() && !orgChart.contains(employee.getManager())) {
+            orgChart.add(employee.getManager());
+            orgChart.add(employee);
+            return true;
+        } else if (employee.hasManager() && orgChart.contains(employee.getManager())) {
+            orgChart.add(employee);
+            return true;
+        } else if (!employee.hasManager() && employee instanceof Manager) {
+            orgChart.add(employee);
+            return true;
+        } else if (!employee.hasManager() && !(employee instanceof Manager)) {
+            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -63,7 +73,7 @@ public class OrgChart {
      */
     public boolean hasEmployee(Employee employee) {
 
-        return allEmployees.contains(employee);
+        return orgChart.contains(employee);
     }
 
     /**
@@ -78,7 +88,7 @@ public class OrgChart {
      */
     public Set<Employee> getAllEmployees() {
 
-        return allEmployees;
+        return new HashSet<>(orgChart);
     }
 
     /**
@@ -92,7 +102,13 @@ public class OrgChart {
      *         have been added to the {@code OrgChart}
      */
     public Set<Manager> getAllManagers() {
+    Set<Manager> allManagers = new HashSet<>();
 
+        for (Employee e : orgChart) {
+            if (e instanceof Manager) {
+                allManagers.add((Manager) e);
+            }
+        }
         return allManagers;
     }
 
@@ -115,11 +131,20 @@ public class OrgChart {
      */
     public Set<Employee> getDirectSubordinates(Manager manager) {
         Set<Employee> possibleSubordinates = new HashSet<>();
-        Set<Employee> possibleEmployees = orgChart.get(manager);
+        List<Manager> allManagers = manager.getChainOfCommand();
 
-        if (possibleEmployees != null && !possibleEmployees.isEmpty()) {
-            possibleSubordinates.addAll(possibleEmployees);
+        if (!orgChart.contains(manager)) {
+            return possibleSubordinates;
         }
+
+        for (Manager m : allManagers) {
+            if (!orgChart.contains(m)) {
+                continue;
+            }
+            return possibleSubordinates;
+        }
+
+        possibleSubordinates.addAll(allManagers);
 
         return possibleSubordinates;
     }
@@ -137,11 +162,18 @@ public class OrgChart {
      *  either in its keys or values. An empty {@code Map} should be returned if the {@code OrgChart} is empty.
      *
      * @return a map in which the keys represent the parent {@code Manager}s in the
-     *         {@code OrgChart}, and the each value is a set of the direct subordinates of the
+     *         {@code OrgChart}, and each value is a set of the direct subordinates of the
      *         associated {@code Manager}, or an empty map if the {@code OrgChart} is empty.
      */
     public Map<Manager, Set<Employee>> getFullHierarchy() {
-        throw new MissingImplementationException();
+        Map<Manager, Set<Employee>> hierarchy = new HashMap<>();
+        Set<Manager> managers = getAllManagers();
+
+        for (Manager m : managers) {
+            hierarchy.put(m, getDirectSubordinates(m));
+        }
+
+        return hierarchy;
     }
 
 }

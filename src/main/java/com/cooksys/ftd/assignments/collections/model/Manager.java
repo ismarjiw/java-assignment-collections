@@ -1,5 +1,6 @@
 package com.cooksys.ftd.assignments.collections.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,9 +90,15 @@ public class Manager implements Employee {
      */
     @Override
     public List<Manager> getChainOfCommand() {
+        List<Manager> chainOfCommand = new ArrayList<>();
+        Manager currentManager = this;
 
+        while (currentManager != null) {
+            chainOfCommand.add(currentManager);
+            currentManager = currentManager.getManager();
+        }
 
-
+        return chainOfCommand;
     }
 
     @Override

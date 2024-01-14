@@ -90,9 +90,16 @@ public class Worker implements Employee {
      */
     @Override
     public List<Manager> getChainOfCommand() {
+        List<Manager> chainOfCommand = new ArrayList<>();
+        Worker currentWorker = this;
+        Manager currentManager = currentWorker.getManager();
 
+        while (currentManager != null) {
+            chainOfCommand.add(currentManager);
+            currentManager = currentManager.getManager();
+        }
 
-
+        return chainOfCommand;
     }
 
     @Override
