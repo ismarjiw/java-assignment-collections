@@ -11,8 +11,6 @@ public class OrgChart {
     //  implementing the other methods as easy as possible. There are several different ways to approach this problem, so
     //  experiment and don't be afraid to change how you're storing your data if it's not working out!
 
-    private Employee employee;
-    private Manager manager;
     private Set<Employee> orgChart = new HashSet<>();
 
     /**
@@ -42,24 +40,25 @@ public class OrgChart {
      */
     public boolean addEmployee(Employee employee) {
 
-        if (orgChart.contains(employee)) {
-            return false;
-        }
+        if (employee != null) {
+            if (orgChart.contains(employee)) {
+                return false;
+            }
 
-        if (employee.hasManager() && !orgChart.contains(employee.getManager())) {
-            orgChart.add(employee.getManager());
-            orgChart.add(employee);
-            return true;
-        } else if (employee.hasManager() && orgChart.contains(employee.getManager())) {
-            orgChart.add(employee);
-            return true;
-        } else if (!employee.hasManager() && employee instanceof Manager) {
-            orgChart.add(employee);
-            return true;
-        } else if (!employee.hasManager() && !(employee instanceof Manager)) {
-            return false;
+            if (employee.hasManager() && !orgChart.contains(employee.getManager())) {
+                orgChart.add(employee.getManager());
+                orgChart.add(employee);
+                return true;
+            } else if (employee.hasManager() && orgChart.contains(employee.getManager())) {
+                orgChart.add(employee);
+                return true;
+            } else if (!employee.hasManager() && employee instanceof Manager) {
+                orgChart.add(employee);
+                return true;
+            } else if (!employee.hasManager() && !(employee instanceof Manager)) {
+                return false;
+            }
         }
-
         return false;
     }
 
@@ -84,7 +83,7 @@ public class OrgChart {
      *  {@code null}!).
      *
      * @return all {@code Employee}s in the {@code OrgChart}, or an empty {@code Set} if no {@code Employee}s have
-     *         been added to the {@code OrgChart}
+     * been added to the {@code OrgChart}
      */
     public Set<Employee> getAllEmployees() {
 
@@ -99,10 +98,10 @@ public class OrgChart {
      *  {@code null}!).
      *
      * @return all {@code Manager}s in the {@code OrgChart}, or an empty {@code Set} if no {@code Manager}s
-     *         have been added to the {@code OrgChart}
+     * have been added to the {@code OrgChart}
      */
     public Set<Manager> getAllManagers() {
-    Set<Manager> allManagers = new HashSet<>();
+        Set<Manager> allManagers = new HashSet<>();
 
         for (Employee e : orgChart) {
             if (e instanceof Manager) {
@@ -126,25 +125,23 @@ public class OrgChart {
      *
      * @param manager the {@code Manager} whose direct subordinates need to be returned
      * @return all {@code Employee}s in the {@code OrgChart} that have the given {@code Manager} as a direct
-     *         parent, or an empty set if the {@code Manager} is not present in the {@code OrgChart}
-     *         or if there are no subordinates for the given {@code Manager}
+     * parent, or an empty set if the {@code Manager} is not present in the {@code OrgChart}
+     * or if there are no subordinates for the given {@code Manager}
      */
     public Set<Employee> getDirectSubordinates(Manager manager) {
         Set<Employee> possibleSubordinates = new HashSet<>();
-        List<Manager> allManagers = manager.getChainOfCommand();
 
         if (!orgChart.contains(manager)) {
             return possibleSubordinates;
         }
 
-        for (Manager m : allManagers) {
-            if (!orgChart.contains(m)) {
-                continue;
-            }
-            return possibleSubordinates;
-        }
+        Set<Employee> allEmployees = getAllEmployees();
 
-        possibleSubordinates.addAll(allManagers);
+        for (Employee e : allEmployees) {
+            if (e.getManager() != null && e.getManager().equals(manager)) {
+                possibleSubordinates.add(e);
+            }
+        }
 
         return possibleSubordinates;
     }
@@ -162,8 +159,8 @@ public class OrgChart {
      *  either in its keys or values. An empty {@code Map} should be returned if the {@code OrgChart} is empty.
      *
      * @return a map in which the keys represent the parent {@code Manager}s in the
-     *         {@code OrgChart}, and each value is a set of the direct subordinates of the
-     *         associated {@code Manager}, or an empty map if the {@code OrgChart} is empty.
+     * {@code OrgChart}, and each value is a set of the direct subordinates of the
+     * associated {@code Manager}, or an empty map if the {@code OrgChart} is empty.
      */
     public Map<Manager, Set<Employee>> getFullHierarchy() {
         Map<Manager, Set<Employee>> hierarchy = new HashMap<>();
@@ -176,4 +173,23 @@ public class OrgChart {
         return hierarchy;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrgChart orgChart1 = (OrgChart) o;
+        return Objects.equals(orgChart, orgChart1.orgChart);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orgChart);
+    }
+
+    @Override
+    public String toString() {
+        return "OrgChart{" +
+                "orgChart=" + orgChart +
+                '}';
+    }
 }
