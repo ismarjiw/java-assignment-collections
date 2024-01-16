@@ -44,23 +44,26 @@ public class OrgChart {
             if (orgChart.contains(employee)) {
                 return false;
             }
-
             if (employee.hasManager() && !orgChart.contains(employee.getManager())) {
                 orgChart.add(employee.getManager());
                 orgChart.add(employee);
                 return true;
-            } else if (employee.hasManager() && orgChart.contains(employee.getManager())) {
+            }
+            if (employee.hasManager() && orgChart.contains(employee.getManager())) {
                 orgChart.add(employee);
                 return true;
-            } else if (!employee.hasManager() && employee instanceof Manager) {
+            }
+            if (!employee.hasManager() && employee instanceof Manager) {
                 orgChart.add(employee);
                 return true;
-            } else if (!employee.hasManager() && !(employee instanceof Manager)) {
+            }
+            if (!employee.hasManager() && !(employee instanceof Manager)) {
                 return false;
             }
         }
         return false;
     }
+
 
     /**
      * TODO: Implement this method

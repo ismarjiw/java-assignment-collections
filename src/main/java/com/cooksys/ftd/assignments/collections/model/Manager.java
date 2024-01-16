@@ -94,9 +94,12 @@ public class Manager implements Employee {
         List<Manager> chainOfCommand = new ArrayList<>();
         Manager currentManager = this;
 
-        while (currentManager != null && currentManager.getManager() != null) {
-            chainOfCommand.add(currentManager);
+        if (currentManager.hasManager()) {
             currentManager = currentManager.getManager();
+            while (currentManager != null) {
+                chainOfCommand.add(currentManager);
+                currentManager = currentManager.getManager();
+            }
         }
 
         return chainOfCommand;

@@ -22,10 +22,7 @@ public class Main {
         Manager m3 = new Manager("Wilson", m4);
         Manager m2 = new Manager("Ismarji", m3);
 
-        Worker w1 = new Worker("Will", m2);
-
         OrgChart orgChart = new OrgChart();
-        orgChart.addEmployee(w1);
         orgChart.addEmployee(m1);
         orgChart.addEmployee(m2);
         orgChart.addEmployee(m3);
