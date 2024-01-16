@@ -38,32 +38,17 @@ public class OrgChart {
      * @param employee the {@code Employee} to add to the {@code OrgChart}
      * @return true if the {@code Employee} was added successfully, false otherwise
      */
+
     public boolean addEmployee(Employee employee) {
-
-        if (employee != null) {
-            if (orgChart.contains(employee)) {
-                return false;
-            }
-            if (employee.hasManager() && !orgChart.contains(employee.getManager())) {
-                orgChart.add(employee.getManager());
-                orgChart.add(employee);
-                return true;
-            }
-            if (employee.hasManager() && orgChart.contains(employee.getManager())) {
-                orgChart.add(employee);
-                return true;
-            }
-            if (!employee.hasManager() && employee instanceof Manager) {
-                orgChart.add(employee);
-                return true;
-            }
-            if (!employee.hasManager() && !(employee instanceof Manager)) {
-                return false;
-            }
+        if (employee == null || orgChart.contains(employee) || (employee instanceof Worker && !employee.hasManager())) {
+            return false;
         }
-        return false;
-    }
 
+        orgChart.addAll(employee.getChainOfCommand());
+        orgChart.add(employee);
+
+        return true;
+    }
 
     /**
      * TODO: Implement this method
